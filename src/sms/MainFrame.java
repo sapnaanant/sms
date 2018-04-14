@@ -85,7 +85,9 @@ public class MainFrame extends JFrame {
 		btnPurchase.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				spDialog s = new spDialog(1);
+				disable();
 				s.setVisible(true);
+				enable();
 				table.repaint();
 			}
 		});
@@ -96,7 +98,9 @@ public class MainFrame extends JFrame {
 		btnSell.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				spDialog s = new spDialog(0);
+				disable();
 				s.setVisible(true);
+				enable();
 				table.repaint();
 			}
 		});

@@ -65,6 +65,37 @@ public class dbCon {
 		return false;
 	}
 	
+	public boolean checkUsername(String username) {
+		try {
+			int count = 0;
+			statement = conn.createStatement();
+			resultSet = statement.executeQuery("select COUNT(*) from login where name='" + username+"'");
+			while(resultSet.next()){
+				count++;
+				if (count > 1)
+					return false;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
+	}
+	
+	public boolean addCredentials(String username, String password) {
+		try {
+			String query = "insert into login(name,password) " + " values (?, ?)";
+			preparedStatement = conn.prepareStatement(query);
+			preparedStatement.setString(1, username);
+			preparedStatement.setString(2, password);
+			preparedStatement.execute();
+			System.out.println("User details added");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
 	
 	//------------------------------------ITEMS-----------------------------------------//
 	
@@ -122,4 +153,74 @@ public class dbCon {
 			e.printStackTrace();
 		}
 	}
+	
+	//-------------------------------------SELL--------------------------------------
+	public void addToSellT(String date, String name, int quan, int price ){
+		try{
+			String query = "insert into sell(date, name,quantity, price) " + " values (?, ?, ?, ?)";
+			preparedStatement = conn.prepareStatement(query);
+			preparedStatement.setString(1, date);
+			preparedStatement.setString(2, name);
+			preparedStatement.setInt(3, quan);
+			preparedStatement.setInt(4, price);
+			preparedStatement.execute();
+			System.out.println("sell insert done");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public ArrayList<String> getAllSellData(){
+		ArrayList<String> data = new ArrayList<>();
+		try {
+			statement = conn.createStatement();
+			resultSet = statement.executeQuery("select * from sell");
+			
+			while(resultSet.next()){
+				data.add(resultSet.getInt(1)+"");
+				data.add(resultSet.getString(2));
+				data.add(resultSet.getString(3));
+				data.add(resultSet.getInt(4)+"");
+				data.add(resultSet.getInt(5)+"");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return data;	
+	}
+	
+	//-------------------------------------PURCHASE--------------------------------------
+		public void addToPurT(String date, String name, int quan, int price ){
+			try{
+				String query = "insert into purchase(date, name,quantity, price) " + " values (?, ?, ?, ?)";
+				preparedStatement = conn.prepareStatement(query);
+				preparedStatement.setString(1, date);
+				preparedStatement.setString(2, name);
+				preparedStatement.setInt(3, quan);
+				preparedStatement.setInt(4, price);
+				preparedStatement.execute();
+				System.out.println("sell insert done");
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+		public ArrayList<String> getAllPurData(){
+			ArrayList<String> data = new ArrayList<>();
+			try {
+				statement = conn.createStatement();
+				resultSet = statement.executeQuery("select * from purchase");
+				
+				while(resultSet.next()){
+					data.add(resultSet.getInt(1)+"");
+					data.add(resultSet.getString(2));
+					data.add(resultSet.getString(3));
+					data.add(resultSet.getInt(4)+"");
+					data.add(resultSet.getInt(5)+"");
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			return data;	
+		}
 }

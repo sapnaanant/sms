@@ -89,5 +89,16 @@ public class loginFrame extends JFrame {
 		pswdField = new JPasswordField();
 		pswdField.setBounds(254, 98, 139, 20);
 		contentPane.add(pswdField);
+		
+		JButton btnSignUp = new JButton("Sign Up");
+		btnSignUp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				signUpFrame sf = new signUpFrame();
+				setVisible(false);
+				sf.setVisible(true);
+			}
+		});
+		btnSignUp.setBounds(304, 154, 89, 23);
+		contentPane.add(btnSignUp);
 	}
 }

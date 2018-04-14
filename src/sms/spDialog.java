@@ -16,18 +16,20 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 public class spDialog extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField quanField;
 	private JTextField dateField;
-
+	private DefaultTableModel model;
 	/**
 	 * Create the dialog.
 	 */
 	public spDialog(int flag) { //flag = 0(sell), 1(purchase)
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 451, 476);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -64,8 +66,9 @@ public class spDialog extends JDialog {
 		contentPanel.add(dateField);
 		{
 			JPanel buttonPane = new JPanel();
+			buttonPane.setBounds(0, 166, 434, 33);
+			contentPanel.add(buttonPane);
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
@@ -86,16 +89,17 @@ public class spDialog extends JDialog {
 						if (flag==0) {
 							if(value-Integer.parseInt(quanField.getText()) > 0) {
 								loginFrame.db.updateItem(index,value-Integer.parseInt(quanField.getText()));
+								loginFrame.db.addToSellT(dateField.getText(), itemsComboBox.getSelectedItem().toString(), Integer.parseInt(quanField.getText()), 0);
 								MainFrame.model.setValueAt(value-Integer.parseInt(quanField.getText()),modelI, 2);
 								MainFrame.items.set(4*modelI+2,(value-Integer.parseInt(quanField.getText()))+"");
 							}
 						}else {
 							loginFrame.db.updateItem(index,value+Integer.parseInt(quanField.getText()));
+							loginFrame.db.addToPurT(dateField.getText(), itemsComboBox.getSelectedItem().toString(), Integer.parseInt(quanField.getText()), 0);
 							MainFrame.model.setValueAt(value+Integer.parseInt(quanField.getText()),modelI, 2);
 							MainFrame.items.set(4*modelI+2,(value+Integer.parseInt(quanField.getText()))+"");
 						}
 						dispose();
-						JFrame.getFrames()[0].enable();
 					}
 				});
 				okButton.setActionCommand("OK");
@@ -104,9 +108,44 @@ public class spDialog extends JDialog {
 			}
 			{
 				JButton cancelButton = new JButton("Cancel");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						dispose();
+					}
+				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
+		}
+		
+		JTable table = new JTable();
+		JScrollPane scrollPane = new JScrollPane(table);
+		String[] col = {"Sl. No." , "Date", "Name", "Quantity", "Price (Rs.)"};
+		model = new DefaultTableModel();
+		model.setColumnIdentifiers(col);
+		table.setModel(model);
+		scrollPane.setBounds(0, 210, 434, 216);
+		contentPanel.add(scrollPane);
+		loadTable(flag);
+	}
+	
+	public void loadTable(int flag) {
+		ArrayList<String> data;
+		if (flag == 0){
+			data = loginFrame.db.getAllSellData();
+		}else{
+			data = loginFrame.db.getAllPurData();
+		}
+		
+		int row = 1;
+		for (int i=0; i<data.size(); i=i+5) {
+			model.addRow(new String[] {
+					(row++)+"",
+					data.get(i+1),
+					data.get(i+2),
+					data.get(i+3),
+					data.get(i+4)
+			});
 		}
 	}
 }
