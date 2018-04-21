@@ -69,10 +69,10 @@ public class dbCon {
 		try {
 			int count = 0;
 			statement = conn.createStatement();
-			resultSet = statement.executeQuery("select COUNT(*) from login where name='" + username+"'");
+			resultSet = statement.executeQuery("select * from login where name='" + username+"'");
 			while(resultSet.next()){
 				count++;
-				if (count > 1)
+				if (count > 0)
 					return false;
 			}
 		} catch (SQLException e) {

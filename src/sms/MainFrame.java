@@ -16,12 +16,13 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 public class MainFrame extends JFrame {
 
 	private JPanel contentPane;
-	private JTable table;
+	static JTable table;
 	static DefaultTableModel model;
 	private JTextField nameField;
 	private JTextField quanField;
@@ -32,6 +33,8 @@ public class MainFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public MainFrame() {
+		setName("MainFrame");
+		setTitle("SMS : Items");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 581, 496);
 		contentPane = new JPanel();
@@ -51,30 +54,30 @@ public class MainFrame extends JFrame {
 		JButton btnAddItem = new JButton("Add Item");
 		btnAddItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				boolean flag = true;
 				if (nameField.getText().trim().equals("")) {
-					optionDialog od = new optionDialog("Name can not be empty.");
-					od.setVisible(true);
+					JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), "Name can not be empty.");
+					flag = false;
 				}else if (quanField.getText().trim().equals("")) {
-					optionDialog od = new optionDialog("Quantity can not be empty.");
-					od.setVisible(true);
+					JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), "Quantity can not be empty.");
+					flag = false;
 				}else if (!quanField.getText().trim().matches("[0-9]*")) {
-					optionDialog od = new optionDialog("Quantity should be number only.");
-					od.setVisible(true);
+					JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), "Quantity should be number only.");
+					flag = false;
 				}else if (priceField.getText().trim().equals("")) {
-					optionDialog od = new optionDialog("Price can not be empty.");
-					od.setVisible(true);
+					JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), "Price can not be empty.");
+					flag = false;
 				}else if (!priceField.getText().trim().matches("[0-9]*")) {
-					optionDialog od = new optionDialog("Price should be number only.");
-					od.setVisible(true);
+					JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), "Price should be number only.");
+					flag = false;
 				}
-				
-				if (loginFrame.db.checkItemName(nameField.getText().toString())) {
-					optionDialog od = new optionDialog("Item already present. Can't add the same items.");
-					od.setVisible(true);
-				}else {
-					loginFrame.db.addItem(nameField.getText(),quanField.getText(),priceField.getText());
-					model.addRow(new String[] {(model.getRowCount()+1)+"", nameField.getText(), quanField.getText(), priceField.getText()});
+				if (flag){
+					if (loginFrame.db.checkItemName(nameField.getText().toString())) {
+						JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), "Item already present. Can't add the same items.");
+					}else {
+						loginFrame.db.addItem(nameField.getText(),quanField.getText(),priceField.getText());
+						model.addRow(new String[] {(model.getRowCount()+1)+"", nameField.getText(), quanField.getText(), priceField.getText()});
+					}
 				}
 			}
 		});
@@ -87,8 +90,6 @@ public class MainFrame extends JFrame {
 				spDialog s = new spDialog(1);
 				disable();
 				s.setVisible(true);
-				enable();
-				table.repaint();
 			}
 		});
 		btnPurchase.setBounds(466, 125, 89, 23);
@@ -100,8 +101,6 @@ public class MainFrame extends JFrame {
 				spDialog s = new spDialog(0);
 				disable();
 				s.setVisible(true);
-				enable();
-				table.repaint();
 			}
 		});
 		btnSell.setBounds(466, 91, 89, 23);

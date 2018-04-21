@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -22,6 +23,8 @@ public class signUpFrame extends JFrame {
 	 * Create the frame
 	 */
 	public signUpFrame() {
+		setName("SignUpFrame");
+		setTitle("SMS : SignUP");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -60,8 +63,20 @@ public class signUpFrame extends JFrame {
 		btnSignUp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (loginFrame.db.checkUsername(nameField.getText().trim())){
-					loginFrame.db.addCredentials(nameField.getText().trim(), pswdField.getText().trim());
-					//show dialog box saying successful or failure
+					if (!pswdField.getText().trim().equals("") && !rePswdField.getText().trim().equals("")){
+						if (pswdField.getText().trim().equals(rePswdField.getText().trim())){
+							loginFrame.db.addCredentials(nameField.getText().trim(), pswdField.getText().trim());
+							JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), "New User Added. Login Now.");
+							JFrame.getFrames()[0].setVisible(true);
+							dispose();
+						}else{
+							JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), "Re-entered password does not match");
+						}
+					}else{
+						JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), "Some fields are empty.");
+					}
+				}else{
+					JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), "Username not available.");
 				}
 			}
 		});
@@ -72,7 +87,9 @@ public class signUpFrame extends JFrame {
 		btnCheckAvailablity.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (loginFrame.db.checkUsername(nameField.getText().trim())){
-					//show option dialog saying available or not
+					JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), "Username is available.");
+				}else{
+					JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), "Username not available.");
 				}
 			}
 		});

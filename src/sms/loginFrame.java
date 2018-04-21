@@ -8,12 +8,16 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
+import java.awt.Canvas;
 
 public class loginFrame extends JFrame {
 
@@ -31,6 +35,9 @@ public class loginFrame extends JFrame {
 			public void run() {
 				try {
 					loginFrame frame = new loginFrame();
+					frame.setTitle("SMS : Login");
+					ImageIcon img = new ImageIcon("sms.jpg");
+					frame.setIconImage(img.getImage());
 					db = new dbCon();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -70,16 +77,11 @@ public class loginFrame extends JFrame {
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (db.verifyCredentials(nameField.getText(), pswdField.getText())){
-					/*optionDialog od = new optionDialog("Login Successful");
-					disable();
-					od.setVisible(true);*/
 					MainFrame mf = new MainFrame();
-					setVisible(false);
 					mf.setVisible(true);
+					dispose();
 				}else {
-					optionDialog od = new optionDialog("Login Unsuccessful");
-					disable();
-					od.setVisible(true);
+					JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), "Wrong Credentials. Login Unsuccessful.");
 				}
 			}
 		});
@@ -100,5 +102,6 @@ public class loginFrame extends JFrame {
 		});
 		btnSignUp.setBounds(304, 154, 89, 23);
 		contentPane.add(btnSignUp);
+		setName("loginFrame");
 	}
 }
