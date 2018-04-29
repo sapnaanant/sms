@@ -12,13 +12,14 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JPasswordField;
 
 public class signUpFrame extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField nameField;
-	private JTextField pswdField;
-	private JTextField rePswdField;
+	private JPasswordField pswdField;
+	private JPasswordField rePswdField;
 	/**
 	 * Create the frame
 	 */
@@ -37,7 +38,7 @@ public class signUpFrame extends JFrame {
 		contentPane.add(lblUsername);
 		
 		nameField = new JTextField();
-		nameField.setBounds(211, 50, 86, 20);
+		nameField.setBounds(211, 50, 86, 17);
 		contentPane.add(nameField);
 		nameField.setColumns(10);
 		
@@ -45,19 +46,9 @@ public class signUpFrame extends JFrame {
 		lblPassword.setBounds(83, 78, 116, 14);
 		contentPane.add(lblPassword);
 		
-		pswdField = new JTextField();
-		pswdField.setBounds(211, 75, 86, 20);
-		contentPane.add(pswdField);
-		pswdField.setColumns(10);
-		
 		JLabel lblReenterPassword = new JLabel("Re-enter Password :");
 		lblReenterPassword.setBounds(83, 103, 116, 14);
 		contentPane.add(lblReenterPassword);
-		
-		rePswdField = new JTextField();
-		rePswdField.setBounds(211, 100, 86, 20);
-		contentPane.add(rePswdField);
-		rePswdField.setColumns(10);
 		
 		JButton btnSignUp = new JButton("Sign Up");
 		btnSignUp.addActionListener(new ActionListener() {
@@ -95,5 +86,13 @@ public class signUpFrame extends JFrame {
 		});
 		btnCheckAvailablity.setBounds(306, 49, 118, 23);
 		contentPane.add(btnCheckAvailablity);
+		
+		pswdField = new JPasswordField();
+		pswdField.setBounds(211, 75, 86, 17);
+		contentPane.add(pswdField);
+		
+		rePswdField = new JPasswordField();
+		rePswdField.setBounds(211, 100, 86, 17);
+		contentPane.add(rePswdField);
 	}
 }

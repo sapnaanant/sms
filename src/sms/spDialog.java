@@ -102,16 +102,18 @@ public class spDialog extends JFrame {
 										modelI++;
 									}
 									if (flag==0) {
-										if(value-Integer.parseInt(quanField.getText()) > 0) {
+										if(value-Integer.parseInt(quanField.getText()) >= 0) {
 											loginFrame.db.updateItem(index,value-Integer.parseInt(quanField.getText()));
-											loginFrame.db.addToSellT(dateField.getText(), itemsComboBox.getSelectedItem().toString(), Integer.parseInt(quanField.getText()), 0);
-											MainFrame.model.setValueAt(value-Integer.parseInt(quanField.getText()),modelI, 2);
+											loginFrame.db.addToSellT(dateField.getText(), itemsComboBox.getSelectedItem().toString(), Integer.parseInt(quanField.getText()));
+											MainFrame.model.setValueAt(value-Integer.parseInt(quanField.getText()),modelI, 1);
 											MainFrame.items.set(4*modelI+2,(value-Integer.parseInt(quanField.getText()))+"");
+										}else{
+											JOptionPane.showMessageDialog(contentPanel.getTopLevelAncestor(), "Not enough in the stock.");
 										}
 									}else {
 										loginFrame.db.updateItem(index,value+Integer.parseInt(quanField.getText()));
-										loginFrame.db.addToPurT(dateField.getText(), itemsComboBox.getSelectedItem().toString(), Integer.parseInt(quanField.getText()), 0);
-										MainFrame.model.setValueAt(value+Integer.parseInt(quanField.getText()),modelI, 2);
+										loginFrame.db.addToPurT(dateField.getText(), itemsComboBox.getSelectedItem().toString(), Integer.parseInt(quanField.getText()));
+										MainFrame.model.setValueAt(value+Integer.parseInt(quanField.getText()),modelI, 1);
 										MainFrame.items.set(4*modelI+2,(value+Integer.parseInt(quanField.getText()))+"");
 										MainFrame.table.repaint();
 									}
@@ -147,7 +149,7 @@ public class spDialog extends JFrame {
 		
 		JTable table = new JTable();
 		JScrollPane scrollPane = new JScrollPane(table);
-		String[] col = {"Sl. No." , "Date", "Name", "Quantity", "Price (Rs.)"};
+		String[] col = {"Sl. No." , "Date", "Name", "Quantity"};
 		model = new DefaultTableModel();
 		model.setColumnIdentifiers(col);
 		table.setModel(model);
@@ -174,13 +176,12 @@ public class spDialog extends JFrame {
 		}
 		
 		int row = 1;
-		for (int i=0; i<data.size(); i=i+5) {
+		for (int i=0; i<data.size(); i=i+4) {
 			model.addRow(new String[] {
 					(row++)+"",
 					data.get(i+1),
 					data.get(i+2),
-					data.get(i+3),
-					data.get(i+4)
+					data.get(i+3)
 			});
 		}
 	}

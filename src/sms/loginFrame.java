@@ -51,6 +51,7 @@ public class loginFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public loginFrame() {
+		setName("loginFrame");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -102,6 +103,6 @@ public class loginFrame extends JFrame {
 		});
 		btnSignUp.setBounds(304, 154, 89, 23);
 		contentPane.add(btnSignUp);
-		setName("loginFrame");
+		
 	}
 }

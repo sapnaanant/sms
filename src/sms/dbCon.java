@@ -130,15 +130,25 @@ public class dbCon {
 		return false;
 	}
 	
-	public void addItem(String name, String quantity, String price){
+	public void addItem(String name, int quantity, int lim){
 		try{
-			String query = "insert into items(name,quantity, price) " + " values (?, ?, ?)";
+			String query = "insert into items(name,quantity,lim) values (?, ?, ?)";
 			preparedStatement = conn.prepareStatement(query);
 			preparedStatement.setString(1, name);
-			preparedStatement.setString(2, quantity);
-			preparedStatement.setString(3, price);
+			preparedStatement.setInt(2, quantity);
+			preparedStatement.setInt(3, lim);
 			preparedStatement.execute();
 			System.out.println("Item insert done");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteItem(int id){
+		try{
+			statement = conn.createStatement();
+			statement.executeUpdate("delete from items where id="+id);
+			System.out.println("Item Deleted");
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -155,14 +165,13 @@ public class dbCon {
 	}
 	
 	//-------------------------------------SELL--------------------------------------
-	public void addToSellT(String date, String name, int quan, int price ){
+	public void addToSellT(String date, String name, int quan){
 		try{
-			String query = "insert into sell(date, name,quantity, price) " + " values (?, ?, ?, ?)";
+			String query = "insert into sell(date, name, quantity) " + " values (?, ?, ?)";
 			preparedStatement = conn.prepareStatement(query);
 			preparedStatement.setString(1, date);
 			preparedStatement.setString(2, name);
 			preparedStatement.setInt(3, quan);
-			preparedStatement.setInt(4, price);
 			preparedStatement.execute();
 			System.out.println("sell insert done");
 		}catch(Exception e){
@@ -181,7 +190,6 @@ public class dbCon {
 				data.add(resultSet.getString(2));
 				data.add(resultSet.getString(3));
 				data.add(resultSet.getInt(4)+"");
-				data.add(resultSet.getInt(5)+"");
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -190,16 +198,15 @@ public class dbCon {
 	}
 	
 	//-------------------------------------PURCHASE--------------------------------------
-		public void addToPurT(String date, String name, int quan, int price ){
+		public void addToPurT(String date, String name, int quan){
 			try{
-				String query = "insert into purchase(date, name,quantity, price) " + " values (?, ?, ?, ?)";
+				String query = "insert into purchase(date, name,quantity) " + " values (?, ?, ?)";
 				preparedStatement = conn.prepareStatement(query);
 				preparedStatement.setString(1, date);
 				preparedStatement.setString(2, name);
 				preparedStatement.setInt(3, quan);
-				preparedStatement.setInt(4, price);
 				preparedStatement.execute();
-				System.out.println("sell insert done");
+				System.out.println("purchase insert done");
 			}catch(Exception e){
 				e.printStackTrace();
 			}
@@ -216,7 +223,6 @@ public class dbCon {
 					data.add(resultSet.getString(2));
 					data.add(resultSet.getString(3));
 					data.add(resultSet.getInt(4)+"");
-					data.add(resultSet.getInt(5)+"");
 				}
 			}catch(Exception e) {
 				e.printStackTrace();

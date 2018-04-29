@@ -1,6 +1,8 @@
 package sms;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Frame;
 
@@ -9,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.JTable;
 import javax.lang.model.element.QualifiedNameable;
 import javax.swing.JButton;
@@ -26,11 +29,11 @@ public class MainFrame extends JFrame {
 	static DefaultTableModel model;
 	private JTextField nameField;
 	private JTextField quanField;
-	private JTextField priceField;
+	private JTextField limitField;
 	static ArrayList<String> items;
 
 	/**
-	 * Create the frame.
+	 * Create the frame
 	 */
 	public MainFrame() {
 		setName("MainFrame");
@@ -42,9 +45,33 @@ public class MainFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		table = new JTable();
+		table = new JTable(){
+			  public Component prepareRenderer(TableCellRenderer renderer,int Index_row, int Index_col) {
+				  Component comp = super.prepareRenderer(renderer, Index_row, Index_col);
+				  if (Index_col == 1){
+					  if (Integer.parseInt(model.getValueAt(Index_row, 1).toString()) < Integer.parseInt(model.getValueAt(Index_row, 2).toString())){
+						  comp.setBackground(Color.red);
+					  }else{
+						  comp.setBackground(Color.white);
+					  }
+				  }
+				  else{
+					  comp.setBackground(Color.white);
+				  }
+			  /*if (Index_row % 2 == 0 && !isCellSelected(Index_row, Index_col)) {
+			  comp.setBackground(Color.lightGray);
+			  } 
+			  else {
+			  comp.setBackground(Color.white);
+			  }*/
+			  return comp;
+			  }
+		};
 		JScrollPane scrollPane = new JScrollPane(table);
-		String[] col = {"Sl. No." , "Name", "Quantity", "Price (Rs.)"};
+		LineNumberTableRowHeader listTableLineNumber = new LineNumberTableRowHeader(scrollPane, table);
+		listTableLineNumber.setBackground(Color.LIGHT_GRAY);
+		scrollPane.setRowHeaderView(listTableLineNumber);
+		String[] col = {"Name", "Quantity", "limit ()"};
 		model = new DefaultTableModel();
 		model.setColumnIdentifiers(col);
 		table.setModel(model);
@@ -64,24 +91,27 @@ public class MainFrame extends JFrame {
 				}else if (!quanField.getText().trim().matches("[0-9]*")) {
 					JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), "Quantity should be number only.");
 					flag = false;
-				}else if (priceField.getText().trim().equals("")) {
-					JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), "Price can not be empty.");
+				}else if (limitField.getText().trim().equals("")) {
+					JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), "limit can not be empty.");
 					flag = false;
-				}else if (!priceField.getText().trim().matches("[0-9]*")) {
-					JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), "Price should be number only.");
+				}else if (!limitField.getText().trim().matches("[0-9]*")) {
+					JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), "limit should be number only.");
 					flag = false;
 				}
 				if (flag){
 					if (loginFrame.db.checkItemName(nameField.getText().toString())) {
 						JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), "Item already present. Can't add the same items.");
 					}else {
-						loginFrame.db.addItem(nameField.getText(),quanField.getText(),priceField.getText());
-						model.addRow(new String[] {(model.getRowCount()+1)+"", nameField.getText(), quanField.getText(), priceField.getText()});
+						loginFrame.db.addItem(nameField.getText(),Integer.parseInt(quanField.getText()),Integer.parseInt(limitField.getText()));
+//						/loginFrame.db.addItem(nameField.getText(),quanField.getText(),limitField.getText());
+						model.addRow(new String[] {nameField.getText(), quanField.getText(), limitField.getText()});
+						items.clear();
+						items = loginFrame.db.getAllItemDetails();
 					}
 				}
 			}
 		});
-		btnAddItem.setBounds(466, 57, 89, 23);
+		btnAddItem.setBounds(451, 57, 104, 23);
 		contentPane.add(btnAddItem);
 		
 		JButton btnPurchase = new JButton("Purchase");
@@ -92,7 +122,7 @@ public class MainFrame extends JFrame {
 				s.setVisible(true);
 			}
 		});
-		btnPurchase.setBounds(466, 125, 89, 23);
+		btnPurchase.setBounds(451, 156, 104, 23);
 		contentPane.add(btnPurchase);
 		
 		JButton btnSell = new JButton("Sell");
@@ -103,7 +133,7 @@ public class MainFrame extends JFrame {
 				s.setVisible(true);
 			}
 		});
-		btnSell.setBounds(466, 91, 89, 23);
+		btnSell.setBounds(451, 122, 104, 23);
 		contentPane.add(btnSell);
 		
 		JLabel lblName = new JLabel("Name");
@@ -116,7 +146,7 @@ public class MainFrame extends JFrame {
 		nameField.setColumns(10);
 		
 		JLabel lblQuantity = new JLabel("Quantity");
-		lblQuantity.setBounds(198, 11, 46, 14);
+		lblQuantity.setBounds(187, 11, 72, 14);
 		contentPane.add(lblQuantity);
 		
 		quanField = new JTextField();
@@ -124,14 +154,31 @@ public class MainFrame extends JFrame {
 		contentPane.add(quanField);
 		quanField.setColumns(10);
 		
-		JLabel lblPrice = new JLabel("Price");
-		lblPrice.setBounds(375, 11, 46, 14);
-		contentPane.add(lblPrice);
+		JLabel lblLimit = new JLabel("Limit");
+		lblLimit.setBounds(369, 11, 72, 14);
+		contentPane.add(lblLimit);
 		
-		priceField = new JTextField();
-		priceField.setBounds(445, 8, 86, 20);
-		contentPane.add(priceField);
-		priceField.setColumns(10);
+		limitField = new JTextField();
+		limitField.setBounds(445, 8, 86, 20);
+		contentPane.add(limitField);
+		limitField.setColumns(10);
+		
+		JButton btnDeleteItem = new JButton("Delete Item");
+		btnDeleteItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (table.getSelectedRow()!=-1){
+					int id = Integer.parseInt(items.get(table.getSelectedRow()*4));
+					loginFrame.db.deleteItem(id);
+					model.removeRow(table.getSelectedRow());
+					items.clear();
+					items = loginFrame.db.getAllItemDetails();
+				}else{
+					JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), "Please select a row.");
+				}
+			}
+		});
+		btnDeleteItem.setBounds(451, 91, 104, 23);
+		contentPane.add(btnDeleteItem);
 		
 		loadTable();
 	}
@@ -141,11 +188,9 @@ public class MainFrame extends JFrame {
 		int row = 1;
 		for (int i=0; i<items.size(); i=i+4) {
 			model.addRow(new String[] {
-					(row++)+"",
 					items.get(i+1),
 					items.get(i+2),
 					items.get(i+3)
-					
 			});
 		}
 	}
